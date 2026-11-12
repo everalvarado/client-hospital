@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enfermería · Turnero Hospitalario</title>
+  <meta name="api-url" content="%VITE_API_URL%" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body class="rol-enfermero">
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo"><span class="logo-mark">💉</span> Enfermería</div>
+    <nav>
+      <button data-sec="sec-pendientes" data-title="Turnos pendientes de aprobación">⏳ Turnos pendientes</button>
+      <button data-sec="sec-controles" data-title="Control de peso y talla">⚖️ Peso y talla</button>
+      <button data-sec="sec-dia" data-title="Turnos del día">📅 Turnos del día</button>
+    </nav>
+    <div class="user"><b id="user-nombre"></b><span id="user-usuario" style="color:#ffffffb0"></span>
+      <button class="btn sm" id="logout">Cerrar sesión</button></div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar"><h1 id="titulo"></h1></div>
+
+    <section class="section" id="sec-pendientes">
+      <div class="alert info">Solo podés aprobar un turno si el paciente tiene un control de peso y talla <b>verificado</b>.
+        Al aprobar, el turno se asocia automáticamente al control verificado más reciente.</div>
+      <div class="card"><div id="tabla-pendientes"></div></div>
+    </section>
+
+    <section class="section" id="sec-controles">
+      <div class="grid g2">
+        <div class="card">
+          <h2>1. Buscar paciente</h2>
+          <input id="buscar-pac" placeholder="Nombre, apellido o DNI">
+          <div id="lista-pac" style="margin-top:.8rem"></div>
+        </div>
+        <div class="card">
+          <h2>2. Registrar control</h2>
+          <form id="form-control" class="grid">
+            <div class="alert info" id="pac-sel">Seleccioná un paciente de la lista.</div>
+            <input type="hidden" name="id_paciente" id="id_paciente">
+            <div class="grid g3">
+              <div><label>Fecha</label><input type="date" name="fecha_control" id="fecha_control"></div>
+              <div><label>Peso (kg)</label><input type="number" step="0.01" min="0.5" max="400" name="peso" required></div>
+              <div><label>Talla (cm)</label><input type="number" step="0.01" min="20" max="250" name="talla" required></div>
+            </div>
+            <label class="check"><input type="checkbox" name="verificado" checked> Marcar como verificado</label>
+            <button class="btn" id="btn-control" disabled>Guardar control</button>
+          </form>
+        </div>
+      </div>
+      <div class="card"><h2 id="titulo-controles">Últimos controles registrados</h2><div id="tabla-controles"></div></div>
+    </section>
+
+    <section class="section" id="sec-dia">
+      <div class="card">
+        <div class="row" style="margin-bottom:1rem;max-width:320px"><div><label>Fecha</label><input type="date" id="f-dia"></div></div>
+        <div id="tabla-dia"></div>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="/js/config.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/enfermero.js"></script>
+</body>
+</html>

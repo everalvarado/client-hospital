@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Turnero Hospitalario · Iniciar sesión</title>
+  <meta name="api-url" content="%VITE_API_URL%" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body class="rol-paciente">
+  <div class="login-wrap">
+    <div class="login-card">
+      <aside class="login-side">
+        <div class="logo"><span class="logo-mark">✚</span> Hospital · Turnero</div>
+        <div>
+          <h1 id="side-title">Portal del paciente</h1>
+          <p id="side-text">Pedí tus turnos, seguí su estado y consultá tus controles de peso y talla.</p>
+        </div>
+        <small style="opacity:.7">Sistema de gestión de turnos médicos</small>
+      </aside>
+
+      <main class="login-main">
+        <h2>Iniciar sesión</h2>
+        <p class="muted" style="margin:0">Elegí con qué rol querés ingresar</p>
+
+        <div class="roles" id="roles">
+          <button type="button" class="role-btn" data-rol="admin"><span class="ico">🛡️</span><span><b>Administrador</b><small>Gestión del sistema</small></span></button>
+          <button type="button" class="role-btn" data-rol="enfermero"><span class="ico">💉</span><span><b>Enfermero</b><small>Controles y turnos</small></span></button>
+          <button type="button" class="role-btn active" data-rol="paciente"><span class="ico">🧑</span><span><b>Paciente</b><small>Mis turnos</small></span></button>
+          <button type="button" class="role-btn" data-rol="medico"><span class="ico">🩺</span><span><b>Médico</b><small>Mi agenda</small></span></button>
+        </div>
+
+        <form id="form-login" class="form-stack">
+          <div>
+            <label for="usuario">Usuario</label>
+            <input id="usuario" name="usuario" autocomplete="username" required />
+          </div>
+          <div>
+            <label for="contrasena">Contraseña</label>
+            <input id="contrasena" name="contrasena" type="password" autocomplete="current-password" required />
+          </div>
+          <div id="login-error" class="alert err hidden"></div>
+          <button class="btn block" type="submit" id="btn-login">Ingresar como Paciente</button>
+          <p id="registro-link" class="muted" style="margin:0;text-align:center">
+            ¿No tenés cuenta? <a href="#" id="abrir-registro">Registrate como paciente</a>
+          </p>
+        </form>
+
+        <div class="demo">
+          <b>Usuarios de prueba:</b> admin / admin123 · enfermera / enfermera123 ·
+          drcarlos / medico123 · juan / paciente123
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/js/config.js"></script>
+<script src="/js/api.js"></script>
+  <script src="/js/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "client-turnero-hospital",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Frontend del turnero hospitalario (HTML + CSS + JS servido con Vite)",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.4.11"
+  }
+}

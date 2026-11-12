@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Médico · Turnero Hospitalario</title>
+  <meta name="api-url" content="%VITE_API_URL%" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body class="rol-medico">
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo"><span class="logo-mark">🩺</span> Consultorio médico</div>
+    <nav>
+      <button data-sec="sec-agenda" data-title="Mi agenda">📋 Agenda del día</button>
+      <button data-sec="sec-proximos" data-title="Todos mis turnos">📅 Mis turnos</button>
+      <button data-sec="sec-horarios" data-title="Mis horarios de atención">🕒 Mis horarios</button>
+    </nav>
+    <div class="user"><b id="user-nombre"></b><span id="user-usuario" style="color:#ffffffb0"></span>
+      <div id="mis-esp" style="margin-top:.4rem"></div>
+      <button class="btn sm" id="logout">Cerrar sesión</button></div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar"><h1 id="titulo"></h1></div>
+
+    <section class="section" id="sec-agenda">
+      <div class="grid g3" id="stats-dia" style="margin-bottom:1.2rem"></div>
+      <div class="card">
+        <h2><span id="fecha-larga"></span>
+          <span class="row" style="flex:0 0 auto">
+            <button class="btn sm sec" id="dia-ant">◀</button>
+            <input type="date" id="f-agenda" style="width:auto">
+            <button class="btn sm sec" id="dia-sig">▶</button>
+          </span>
+        </h2>
+        <p class="muted" style="margin-top:0">Se muestran los turnos aprobados (listos para atender) y los ya atendidos.</p>
+        <div id="agenda"></div>
+      </div>
+    </section>
+
+    <section class="section" id="sec-proximos">
+      <div class="card">
+        <div class="row" style="margin-bottom:1rem;max-width:360px">
+          <div><label>Estado</label>
+            <select id="f-estado"><option value="">Todos</option><option>Pendiente</option><option>Aprobado</option><option>Atendido</option><option>Cancelado</option></select>
+          </div>
+        </div>
+        <div id="tabla-turnos"></div>
+      </div>
+    </section>
+    <section class="section" id="sec-horarios">
+      <div class="card">
+        <p class="muted" style="margin-top:0">Días y horas en que los pacientes pueden pedirte turno. Los carga el administrador.</p>
+        <div id="tabla-horarios"></div>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="/js/config.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/medico.js"></script>
+</body>
+</html>

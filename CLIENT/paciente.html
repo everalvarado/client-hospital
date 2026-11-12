@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paciente · Turnero Hospitalario</title>
+  <meta name="api-url" content="%VITE_API_URL%" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body class="rol-paciente">
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo"><span class="logo-mark">🧑</span> Portal del paciente</div>
+    <nav>
+      <button data-sec="sec-pedir" data-title="Pedir un turno">➕ Pedir turno</button>
+      <button data-sec="sec-turnos" data-title="Mis turnos">📅 Mis turnos</button>
+      <button data-sec="sec-controles" data-title="Mis controles de peso y talla">⚖️ Mis controles</button>
+      <button data-sec="sec-perfil" data-title="Mis datos">👤 Mis datos</button>
+    </nav>
+    <div class="user"><b id="user-nombre"></b><span id="user-usuario" style="color:#ffffffb0"></span>
+      <button class="btn sm" id="logout">Cerrar sesión</button></div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar"><h1 id="titulo"></h1></div>
+
+    <section class="section" id="sec-pedir">
+      <div class="card">
+        <div class="grid g3">
+          <div><label>1. Especialidad</label><select id="sel-esp"><option value="">Elegí una especialidad…</option></select></div>
+          <div><label>2. Médico</label><select id="sel-med" disabled><option value="">—</option></select></div>
+          <div><label>3. Fecha</label><input type="date" id="sel-fecha" disabled></div>
+        </div>
+        <div style="margin-top:1.2rem">
+          <label class="check" style="margin-bottom:.8rem">
+            <input type="checkbox" id="chk-prio"> Vivo en un paraje o comunidad lejana (turno con prioridad)
+          </label>
+          <div style="margin-bottom:1rem"><label>Motivo de la consulta</label>
+            <input id="motivo" maxlength="200" placeholder="Ej.: control general, dolor de cabeza, resultados de análisis…"></div>
+          <div id="aviso"></div>
+          <label>4. Horario</label>
+          <div id="slots" class="slots"><span class="muted">Elegí médico y fecha para ver los horarios.</span></div>
+        </div>
+        <div class="footer" style="display:flex;justify-content:flex-end;margin-top:1.2rem">
+          <button class="btn" id="btn-confirmar" disabled>Solicitar turno</button>
+        </div>
+      </div>
+      <div class="alert info">Tu turno quedará <b>Pendiente</b> hasta que enfermería registre y verifique tu control de peso y talla y lo apruebe.</div>
+    </section>
+
+    <section class="section" id="sec-turnos">
+      <div class="card"><div id="tabla-turnos"></div></div>
+    </section>
+
+    <section class="section" id="sec-controles">
+      <div class="card"><div id="tabla-controles"></div></div>
+    </section>
+
+    <section class="section" id="sec-perfil">
+      <div class="card" style="max-width:640px">
+        <form id="form-perfil" class="grid g2">
+          <div><label>DNI</label><input name="dni" disabled></div>
+          <div><label>Fecha de nacimiento</label><input name="fecha_nacimiento" type="date" disabled></div>
+          <div><label>Nombre</label><input name="nombre" disabled></div>
+          <div><label>Apellido</label><input name="apellido" disabled></div>
+          <div><label>Teléfono</label><input name="telefono" maxlength="20"></div>
+          <div><label>Email</label><input name="email" type="email" maxlength="100"></div>
+          <div><label>País</label><select name="id_pais"></select></div>
+          <div><label>Ciudad</label><input name="ciudad" maxlength="80"></div>
+          <div style="grid-column:1/-1"><label>Dirección</label><input name="direccion" maxlength="100"></div>
+          <div><label>Obra social</label><input name="obra_social" maxlength="80"></div>
+          <div><label>N° de afiliado</label><input name="numero_afiliado" maxlength="30"></div>
+          <div style="grid-column:1/-1;text-align:right"><button class="btn">Guardar cambios</button></div>
+        </form>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="/js/config.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/paciente.js"></script>
+</body>
+</html>

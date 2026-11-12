@@ -1,0 +1,31 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "API (puerto 3001)",
+      "program": "${workspaceFolder}/API/src/app.js",
+      "cwd": "${workspaceFolder}/API",
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node-terminal",
+      "request": "launch",
+      "name": "CLIENT (puerto 5173)",
+      "command": "npm run dev",
+      "cwd": "${workspaceFolder}/CLIENT"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Reiniciar base de datos (db:reset)",
+      "program": "${workspaceFolder}/API/src/database/reset.js",
+      "cwd": "${workspaceFolder}/API",
+      "console": "integratedTerminal"
+    }
+  ],
+  "compounds": [
+    { "name": "▶ Iniciar todo (API + CLIENT)", "configurations": ["API (puerto 3001)", "CLIENT (puerto 5173)"] }
+  ]
+}

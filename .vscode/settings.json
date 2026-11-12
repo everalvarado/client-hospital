@@ -1,0 +1,15 @@
+{
+  "files.encoding": "utf8",
+  "editor.tabSize": 2,
+  "sqltools.connections": [
+    {
+      "name": "Turnero (PostgreSQL local)",
+      "driver": "PostgreSQL",
+      "server": "localhost",
+      "port": 5432,
+      "database": "hospital_db",
+      "username": "postgres",
+      "askForPassword": true
+    }
+  ]
+}

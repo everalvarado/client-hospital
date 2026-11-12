@@ -1,0 +1,12 @@
+# Blueprint de Render: publica el CLIENT como sitio estático.
+# En Render: New > Blueprint > elegí este repositorio de GitHub.
+# Te va a pedir VITE_API_URL: pegá la URL de tu API, ej. https://turnero-api.onrender.com
+services:
+  - type: web
+    name: turnero-client
+    runtime: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false

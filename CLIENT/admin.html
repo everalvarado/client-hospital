@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administrador · Turnero Hospitalario</title>
+  <meta name="api-url" content="%VITE_API_URL%" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body class="rol-admin">
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo"><span class="logo-mark">🛡️</span> Administración</div>
+    <nav>
+      <button data-sec="sec-inicio" data-title="Resumen general">📊 Resumen</button>
+      <button data-sec="sec-personas" data-title="Personas y usuarios">👥 Personas y usuarios</button>
+      <button data-sec="sec-medicos" data-title="Médicos y especialidades">🩺 Médicos / especialidades</button>
+      <button data-sec="sec-horarios" data-title="Horarios de atención">🕒 Horarios</button>
+      <button data-sec="sec-consultorios" data-title="Consultorios y países">🚪 Consultorios / países</button>
+      <button data-sec="sec-turnos" data-title="Todos los turnos">📅 Turnos</button>
+    </nav>
+    <div class="user"><b id="user-nombre"></b><span id="user-usuario" class="muted" style="color:#ffffffb0"></span>
+      <button class="btn sm" id="logout">Cerrar sesión</button></div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar"><h1 id="titulo"></h1></div>
+
+    <!-- RESUMEN -->
+    <section class="section" id="sec-inicio">
+      <div class="grid g3" id="stats" style="margin-bottom:1.2rem"></div>
+      <div class="card">
+        <h2>Regla de prioridad: mínimo 2 turnos por día para parajes / comunidades lejanas</h2>
+        <p class="muted" style="margin-top:0">Próximos 14 días. Los días en rojo todavía no cumplen la regla.</p>
+        <div id="prioridad"></div>
+      </div>
+    </section>
+
+    <!-- PERSONAS -->
+    <section class="section" id="sec-personas">
+      <div class="card">
+        <h2>Personas registradas
+          <span class="row" style="flex:0 1 420px">
+            <input id="buscar-persona" placeholder="Buscar por nombre, apellido o DNI">
+            <button class="btn" id="nueva-persona">+ Nueva persona</button>
+          </span>
+        </h2>
+        <div id="tabla-personas"></div>
+      </div>
+    </section>
+
+    <!-- MEDICOS -->
+    <section class="section" id="sec-medicos">
+      <div class="grid g2">
+        <div class="card">
+          <h2>Especialidades</h2>
+          <form id="form-esp" class="row" style="margin-bottom:1rem">
+            <div><input name="nombre" placeholder="Nueva especialidad" required maxlength="50"></div>
+            <button class="btn">Agregar</button>
+          </form>
+          <div id="tabla-esp"></div>
+        </div>
+        <div class="card">
+          <h2>Asignar especialidad a médico</h2>
+          <form id="form-me" class="grid">
+            <div><label>Médico</label><select name="id_medico" id="sel-medico" required></select></div>
+            <div><label>Especialidad</label><select name="id_especialidad" id="sel-esp" required></select></div>
+            <button class="btn">Asignar</button>
+          </form>
+        </div>
+      </div>
+      <div class="card"><h2>Médicos</h2><div id="tabla-medicos"></div></div>
+    </section>
+
+    <!-- HORARIOS -->
+    <section class="section" id="sec-horarios">
+      <div class="card">
+        <h2>Agregar horario de atención</h2>
+        <form id="form-horario" class="row">
+          <div><label>Médico</label><select name="id_medico" id="h-medico" required></select></div>
+          <div><label>Día</label><select name="dia_semana" required>
+            <option value="1">Lunes</option><option value="2">Martes</option><option value="3">Miércoles</option>
+            <option value="4">Jueves</option><option value="5">Viernes</option><option value="6">Sábado</option><option value="0">Domingo</option>
+          </select></div>
+          <div><label>Desde</label><input type="time" name="hora_inicio" value="08:00" required></div>
+          <div><label>Hasta</label><input type="time" name="hora_fin" value="12:00" required></div>
+          <div><label>Duración (min)</label><input type="number" name="duracion_minutos" value="30" min="5" max="240" required></div>
+          <div><label>Consultorio</label><select name="id_consultorio" id="h-consultorio"></select></div>
+          <button class="btn">Agregar</button>
+        </form>
+      </div>
+      <div class="card">
+        <h2>Horarios cargados <span class="row" style="flex:0 0 260px"><select id="h-filtro"><option value="">Todos los médicos</option></select></span></h2>
+        <div id="tabla-horarios"></div>
+      </div>
+    </section>
+
+    <!-- CONSULTORIOS -->
+    <section class="section" id="sec-consultorios">
+      <div class="card">
+        <h2>Consultorios</h2>
+        <form id="form-cons" class="row" style="margin-bottom:1rem">
+          <div><label>Número</label><input name="numero" type="number" required min="1"></div>
+          <div style="flex:3"><label>Descripción</label><input name="descripcion" maxlength="100"></div>
+          <button class="btn">Agregar</button>
+        </form>
+        <div id="tabla-cons"></div>
+      </div>
+      <div class="card">
+        <h2>Países</h2>
+        <form id="form-pais" class="row" style="margin-bottom:1rem">
+          <div><input name="nombre" placeholder="Nuevo país" required maxlength="60"></div>
+          <button class="btn">Agregar</button>
+        </form>
+        <div id="tabla-paises"></div>
+      </div>
+    </section>
+
+    <!-- TURNOS -->
+    <section class="section" id="sec-turnos">
+      <div class="card">
+        <div class="row" style="margin-bottom:1rem">
+          <div><label>Fecha</label><input type="date" id="f-fecha"></div>
+          <div><label>Estado</label>
+            <select id="f-estado"><option value="">Todos</option><option>Pendiente</option><option>Aprobado</option><option>Cancelado</option><option>Atendido</option></select>
+          </div>
+          <button class="btn sec" id="f-limpiar">Limpiar</button>
+        </div>
+        <div id="tabla-turnos"></div>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="/js/config.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/admin.js"></script>
+</body>
+</html>
