@@ -1,0 +1,193 @@
+PRUEBAS DEL SISTEMA HOSPITALARIO DE TURNOS
+==========================================
+
+Preparación
+-----------
+1. PostgreSQL encendido.
+2. En API:    npm run db:reset   y después   npm run dev   (puerto 3001)
+3. En CLIENT: npm run dev                                   (puerto 5173)
+4. Usuarios:  admin/admin123 · enfermera/enfermera123 · med001..med005/med123 · juan/paciente123 · sofia/paciente123
+
+Resultado: OK = funcionó como se esperaba · FALLA = anotar qué pasó
+
+
+A. LOGIN Y SEGURIDAD
+--------------------
+CP-01  Login correcto
+       Pasos:     Rol Paciente -> juan / paciente123
+       Esperado:  Entra a la pantalla del paciente                         [   ]
+CP-02  Contraseña incorrecta
+       Pasos:     juan / 123456
+       Esperado:  "Contraseña incorrecta"                                   [   ]
+CP-03  Rol equivocado
+       Pasos:     Rol Médico -> juan / paciente123
+       Esperado:  "Este usuario no tiene el rol Médico"                    [   ]
+CP-04  Usuario inactivo
+       Pasos:     Admin desactiva a sofia; sofia intenta entrar
+       Esperado:  No puede entrar                                          [   ]
+CP-05  Sin token
+       Pasos:     GET http://localhost:3001/turnos sin Authorization
+       Esperado:  401                                                      [   ]
+CP-06  Sin permiso
+       Pasos:     Con token de paciente: GET /personas
+       Esperado:  403                                                      [   ]
+CP-07  Página de otro rol
+       Pasos:     Logueado como paciente, abrir /admin.html
+       Esperado:  Vuelve al login                                          [   ]
+
+
+B. PACIENTE
+-----------
+CP-08  Registro
+       Pasos:     Login -> Registrarme -> completar datos
+       Esperado:  Aviso de éxito; puede iniciar sesión                     [   ]
+CP-09  DNI repetido
+       Pasos:     Registrarse con el DNI de juan
+       Esperado:  409 "Ya existe un registro con esos datos (duplicado)."  [   ]
+CP-10  Campos vacíos o email inválido
+       Pasos:     Enviar el formulario incompleto
+       Esperado:  Avisa el campo con error; no se envía                    [   ]
+CP-11  Pedir turno
+       Pasos:     Especialidad -> médico -> fecha -> horario -> motivo -> Solicitar
+       Esperado:  Turno "Pendiente" en Mis turnos                          [   ]
+CP-12  Fecha pasada
+       Pasos:     Elegir ayer
+       Esperado:  No se puede elegir. Por API: 400                         [   ]
+CP-13  Horario ocupado (RN-04)
+       Pasos:     Pedir un horario ya tomado
+       Esperado:  Aparece tachado. Por API: 409                            [   ]
+CP-14  Día sin atención (RN-05)
+       Pasos:     Elegir un día en que el médico no atiende
+       Esperado:  Avisa qué días atiende                                   [   ]
+CP-15  Dos turnos el mismo día con el mismo médico (RN-06)
+       Esperado:  400                                                      [   ]
+CP-16  Cancelar turno
+       Esperado:  Estado "Cancelado"; el horario se libera                 [   ]
+
+
+C. ENFERMERO
+------------
+CP-17  Registrar control
+       Pasos:     Peso y talla -> buscar sofia -> peso 60, talla 165
+       Esperado:  Control "Sin verificar"                                  [   ]
+CP-18  Peso o talla inválidos
+       Pasos:     peso -5 o talla 0
+       Esperado:  400 (el peso y la talla deben ser mayores a 0)          [   ]
+CP-19  Aprobar sin control verificado (RN-01)
+       Pasos:     Turno de sofia
+       Esperado:  Botón desactivado. Por API: 400 con el mensaje de la regla [   ]
+CP-20  Verificar control
+       Esperado:  Cambia a "Verificado"                                    [   ]
+CP-21  Aprobar con control verificado (RN-03)
+       Pasos:     Aprobar el turno de sofia con consultorio 101
+       Esperado:  "Aprobado"; id_control = control verificado más reciente [   ]
+
+
+D. MÉDICO
+---------
+CP-22  Agenda del día
+       Pasos:     med001 -> Agenda
+       Esperado:  Solo sus turnos                                          [   ]
+CP-23  Ficha del paciente
+       Esperado:  Datos, controles con IMC e historial                     [   ]
+CP-24  Marcar atendido
+       Esperado:  Estado "Atendido"                                        [   ]
+
+
+E. ADMINISTRADOR
+----------------
+CP-25  Resumen y Regla 2 (RN-02)
+       Esperado:  14 días, cada uno con al menos 2 lugares con prioridad   [   ]
+CP-26  Cupos reservados
+       Pasos:     Como paciente, llenar un día sin prioridad
+       Esperado:  Los últimos 2 horarios solo se toman con prioridad       [   ]
+CP-27  Alta de médico con usuario
+       Esperado:  Aparece en la lista y puede entrar                       [   ]
+CP-28  Agregar especialidad repetida
+       Esperado:  409                                                      [   ]
+CP-29  Horario con fin antes del inicio
+       Esperado:  400 "La hora de fin debe ser posterior a la de inicio"   [   ]
+
+
+F. BASE DE DATOS (pgAdmin)
+--------------------------
+CP-30  Trigger por SQL
+       UPDATE turno SET estado = 'Aprobado' WHERE id_paciente = <id de sofia sin control verificado>;
+       Esperado:  ERROR "No se puede aprobar el turno..."                  [   ]
+CP-31  Contraseñas encriptadas
+       SELECT nombre_usuario, contrasena FROM usuario;
+       Esperado:  Hash $2a$10$...                                          [   ]
+CP-32  Índice parcial
+       Insertar dos turnos activos del mismo médico, fecha y hora
+       Esperado:  ERROR de clave duplicada                                 [   ]
+
+
+G. GENERALES
+------------
+CP-33  PostgreSQL apagado
+       Esperado:  503 "No se pudo conectar a PostgreSQL"                   [   ]
+CP-34  Responsive
+       Pasos:     Abrir en el celular (o F12 -> modo dispositivo)
+       Esperado:  Menús y tablas se adaptan                                [   ]
+CP-35  Render
+       Pasos:     Abrir la URL publicada
+       Esperado:  Login y los 4 roles funcionan (la primera carga tarda ~1 min) [   ]
+
+
+H. VALIDACIÓN DE DATOS
+----------------------
+CP-36  DNI con letras o puntos
+       Pasos:     Registro -> escribir 42.123.abc
+       Esperado:  Solo quedan los números (42123); máximo 8               [   ]
+CP-37  Email sin @
+       Pasos:     Registro -> email "anamail.com" -> salir del campo
+       Esperado:  "El email debe tener un @"                               [   ]
+CP-38  Email sin dominio
+       Pasos:     "ana@mail"
+       Esperado:  "Falta el dominio después del @"                         [   ]
+CP-39  Nombre con números
+       Pasos:     Escribir "Ana123"
+       Esperado:  Los números no se escriben                               [   ]
+CP-40  Teléfono con letras
+       Esperado:  Las letras no se escriben; mínimo 7 números              [   ]
+CP-41  Nacimiento futuro
+       Esperado:  "La fecha de nacimiento no puede ser futura"             [   ]
+CP-42  Contraseña sin números
+       Pasos:     "abcdef"
+       Esperado:  "Debe tener al menos una letra y un número"              [   ]
+CP-43  Formulario con errores
+       Pasos:     Tocar "Crear cuenta" con campos mal
+       Esperado:  No se envía; campos en rojo y aviso "Revisá los campos…" [   ]
+CP-44  Saltear el frontend
+       Pasos:     Postman: POST /auth/registro-paciente con dni "abc"
+       Esperado:  400 "El DNI debe tener solo números…"                    [   ]
+CP-45  Peso con texto por API
+       Pasos:     POST /control con peso "abc"
+       Esperado:  400 "El peso debe ser un número entre 0,5 y 400 kg"      [   ]
+
+
+PRUEBAS DE LA API (REST Client / Postman)
+-----------------------------------------
+Archivo: API/api.http
+
+POST http://localhost:3001/auth/login
+Content-Type: application/json
+
+{ "usuario": "enfermera", "contraseña": "enfermera123", "rol": "enfermero" }
+
+-> copiar el "token" de la respuesta y usarlo así:
+
+GET http://localhost:3001/turnos?estado=Pendiente
+Authorization: Bearer <token>
+
+PATCH http://localhost:3001/turnos/1/aprobar
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "id_consultorio": 1 }
+
+
+Registro de ejecución
+---------------------
+Fecha: ____/____/______     Probado por: ______________________
+Casos OK: ____ / 45         Fallas encontradas: ______________________
